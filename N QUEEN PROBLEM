@@ -1,0 +1,64 @@
+#include <iostream>
+#define n 8
+
+using namespace std;
+
+int valid(int a[n][n],int row,int col)
+{
+	int i,j;
+	for(i=0;i<col;i++) {
+		if(a[row][i]) return 0;
+	}
+	i=row-1;
+	j=col-1;
+	while(i>=0&&j>=0) {
+		if(a[i][j]) return 0;
+		i--;
+		j--;
+	}
+	i=row+1;
+	j=col-1;
+	while(i<n&&j>=0) {
+		if(a[i][j]) return 0;
+		i++;
+		j--;
+	}
+	return 1;
+}
+
+int solve(int a[n][n],int col)
+{
+	if(col>=n) return 1;
+	int i;
+	for(i=0;i<n;i++) {
+		if(valid(a,i,col)) {
+			a[i][col]=1;
+			if(solve(a,col+1)) return 1;
+			else a[i][col]=0;
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	int i,j;
+	int a[n][n];
+	for(i=0;i<n;i++) {
+		for(j=0;j<n;j++) {
+			a[i][j]=0;
+		}
+	}
+	if(solve(a,0)) {
+		for(i=0;i<n;i++) {
+			for(j=0;j<n;j++) {
+				cout << a[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
+	else {
+		cout << "nope\n";
+	}
+	return 0;
+}
