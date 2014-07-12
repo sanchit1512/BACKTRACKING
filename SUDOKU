@@ -1,0 +1,115 @@
+#include <iostream>
+
+using namespace std;
+
+int row_val(int a[9][9],int box,int value)
+{
+	int i,row,col;
+	col=box%9;
+	row=box/9;
+	for(i=0;i<9;i++) {
+		if(a[row][i]==value) return 0;
+	}
+	return 1;
+}
+
+int col_val(int a[9][9],int box,int value)
+{
+	int i,row,col;
+	col=box%9;
+	row=box/9;
+	for(i=0;i<9;i++) {
+		if(a[i][col]==value) return 0;
+	}
+	return 1;
+}
+
+int bx_val(int a[9][9],int box,int value)
+{
+	int i,j,r,c,row,col;
+	c=box%9;
+	r=box/9;
+	col=c/3;
+	row=r/3;
+	col=col*3;
+	row=row*3;
+	for(i=0;i<3;i++) {
+		for(j=0;j<3;j++) {
+			if(a[i+row][j+col]==value) return 0;
+		}
+	}
+	return 1;
+}
+
+int valid(int a[9][9],int box,int value)
+{
+	if(!row_val(a,box,value)) return 0;
+	else if(!col_val(a,box,value)) return 0;
+	else if(!bx_val(a,box,value)) return 0;
+	else return 1;
+}
+
+int nxt_box(int a[9][9],int box)
+{
+	int i,x,y;
+	for(i=box+1;i<81;i++) {
+		y=i%9;
+		x=i/9;
+		if(a[x][y]==0) return i;
+	}
+	return 81;
+}
+
+int solve(int a[9][9],int box)
+{
+	if(box==81) return 1;
+	int x,y,i,t;
+	y=box%9;
+	x=box/9;
+	for(i=1;i<=9;i++) {
+		if(valid(a,box,i)) {
+			a[x][y]=i;
+			t=nxt_box(a,box);
+			if(solve(a,t)) return 1;
+			else a[x][y]=0;
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	int i,j;
+	int a[9][9]={{0, 0, 0, 0, 8, 0, 0, 0, 0},
+		     {0, 0, 3, 6, 0, 0, 0, 0, 0},
+		     {0, 7, 0, 0, 9, 0, 2, 0, 0},
+	     	     {0, 5, 0, 0, 0, 7, 0, 0, 0},
+		     {0, 0, 0, 0, 4, 5, 7, 0, 0},
+		     {0, 0, 0, 1, 0, 0, 0, 3, 0},
+		     {0, 0, 1, 0, 0, 0, 0, 6, 8},
+		     {0, 0, 8, 5, 0, 0, 0, 1, 0},
+		     {0, 9, 0, 0, 0, 0, 4, 0, 0}};
+//	int a[9][9];
+//	for(i=0;i<9;i++) {
+//		for(j=0;j<9;j++) {
+//			cin >> a[i][j];
+//		}
+//	}
+
+	if(solve(a,0)) {
+		cout <<"-----------------------\n";
+		for(i=0;i<9;i++) {
+			for(j=0;j<9;j++) {
+				cout << a[i][j];
+				if(j%3==2) cout << " | ";
+				else cout << " ";
+			}
+			if(i%3==2) cout <<endl<< "-----------------------";
+			cout << endl;
+		}
+	}
+	else {
+		cout << "NO SOLUTION EXIST\n";
+	}
+	return 0;
+}
